@@ -1,0 +1,8 @@
+html
+  head
+    title!= title
+  body
+    h1!= message
+    form(action="/harpost", method="post", enctype="multipart/form-data")
+        input(type="file", name="har")
+        button(type="submit")= submit

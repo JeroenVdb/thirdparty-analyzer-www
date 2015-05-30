@@ -1,0 +1,16 @@
+html
+  head
+    title!= title
+  body
+    h1!= message
+    for typeProvider in result
+        for provider in typeProvider
+            ul
+                li #{provider.name}
+                    ul
+                        li requests: #{provider.totals.requests}
+                            ul
+                                for entry in provider.entries
+                                    li #{entry.request.url}
+                        li timings: #{provider.totals.timings}
+                        li size: #{provider.totals.content.size}
