@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
-  "directories": {
-    "test": "test"
-  },
   "dependencies": {
     "body-parser": "^1.12.3",
     "busboy": "^0.2.9",
@@ -13,6 +10,9 @@
     "express": "^4.12.3",
     "jade": "^1.9.2",
     "party-pooper": "https://github.com/JeroenVdb/party-pooper/archive/1.0.0.tar.gz"
+  },
+  "engines": {
+    "node": "0.10.33"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
