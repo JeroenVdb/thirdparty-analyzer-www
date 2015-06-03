@@ -6,7 +6,9 @@
 		"document": false,
 		"debounce": false,
 		"require": false,
-		"console": false
+		"console": false,
+		"process": false,
+		"module": false
 	},
 	"rules": {
 		"comma-dangle": 2,
