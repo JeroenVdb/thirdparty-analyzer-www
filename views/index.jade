@@ -4,5 +4,8 @@ html
   body
     h1!= message
     form(action="/harpost", method="post", enctype="multipart/form-data")
+        textarea(name="firstparty", rows="6", cols="100")
+        br
         input(type="file", name="har")
+        br
         button(type="submit")= submit

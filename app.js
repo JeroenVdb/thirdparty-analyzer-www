@@ -32,7 +32,8 @@ app.post('/harpost', function(req, res) {
 			{
 				'headers': req.headers
 			}
-		);
+		),
+		firstparty = [];
 
 	busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
 		console.log('File [' + fieldname + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimetype);
@@ -46,7 +47,7 @@ app.post('/harpost', function(req, res) {
 			// console.log(fullData);
 			// res.writeHead(303, { Connection: 'close', Location: '/' });
 			// console.log(fullData);
-			result = pp.run(JSON.parse(fullData), ['demorgen-cdn.be', 'demorgen.be']);
+			result = pp.run(JSON.parse(fullData), firstparty);
 			res.render('result', {
 				'title': 'Third party pooper',
 				'message': 'Gimmy all your HAR!',
@@ -56,6 +57,10 @@ app.post('/harpost', function(req, res) {
 	});
 	busboy.on('field', function(fieldname, val) {
 		console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+		if (fieldname === 'firstparty') {
+			firstparty = val.split(/\r\n/);
+			console.log(firstparty);
+		}
 	});
 	busboy.on('finish', function() {
 		console.log('Done parsing form!');
