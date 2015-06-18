@@ -3,9 +3,16 @@ html
     title!= title
   body
     h1!= message
-    form(action="/harpost", method="post", enctype="multipart/form-data")
+    form(action="/analyze", method="post", enctype="multipart/form-data")
+        label First party urls, one url per line
+        br
         textarea(name="firstparty", rows="6", cols="100")
         br
+        br
+        label HAR File
+        br
         input(type="file", name="har")
+        br
+        br
         br
         button(type="submit")= submit
