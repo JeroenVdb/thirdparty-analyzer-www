@@ -204,41 +204,41 @@ function checkThirdParty(entry) {
 
 	var provider = partyPooper.run(url);
 
-	if (provider && !foundOne) {
+	if (!foundOne) {
+		if (provider) {
 
-		winston.log('info', 'Found a provider for this one: ' + provider.name);
+			winston.log('info', 'Found a provider for this one: ' + provider.name);
 
-		thirdParty.forEach(function(knownProvider) {
-			if (provider.id === knownProvider.id) {
+			thirdParty.forEach(function(knownProvider) {
+				if (provider.id === knownProvider.id) {
 
-				winston.log('info', 'Provider' + provider.name + ' already existed, add it to the existing object');
+					winston.log('info', 'Provider' + provider.name + ' already existed, add it to the existing object');
 
-				knownProvider.entries.push(entry);
-				foundOne = true;
-				return true;
+					knownProvider.entries.push(entry);
+					foundOne = true;
+					return true;
+				}
+			});
+
+			if (!foundOne) {
+
+				winston.log('info', 'Provider' + provider.name + ' didnt exist, add it new to the array');
+
+				provider.entries.push(entry);
+				thirdParty.push(provider);
 			}
-		});
+		} else {
+			winston.log('info', 'Nothing found for this one, create a new entry');
 
-		if (!foundOne) {
-
-			winston.log('info', 'Provider' + provider.name + ' didnt exist, add it new to the array');
-
-			provider.entries.push(entry);
-			thirdParty.push(provider);
+			var newEntry = {};
+			newEntry.id = entry.request.url;
+			newEntry.name = entry.request.url;
+			newEntry.totals = {};
+			newEntry.entries = [];
+			newEntry.entries.push(entry);
+			thirdParty.push(newEntry);
 		}
-	} else {
-		winston.log('info', 'Nothing found for this one, create a new entry');
-
-		var newEntry = {};
-		newEntry.id = entry.request.url;
-		newEntry.name = entry.request.url;
-		newEntry.totals = {};
-		newEntry.entries = [];
-		newEntry.entries.push(entry);
-		thirdParty.push(newEntry);
 	}
-
-
 }
 
 function calculateTotals(provider) {
