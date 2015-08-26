@@ -14,7 +14,7 @@ var FormHandler = require('./controllers/formHandler.js');
 app.set('view engine', 'jade');
 
 // basic server configuration
-server = app.listen(config.env, function() {
+server = app.listen(config.port, function() {
 	var host = server.address().address,
 	port = server.address().port;
 
