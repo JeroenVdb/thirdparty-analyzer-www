@@ -11,7 +11,8 @@
     "jade": "^1.9.2",
     "party-pooper": "https://github.com/JeroenVdb/party-pooper/archive/1.5.0.tar.gz",
     "valid-url": "^1.0.9",
-    "winston": "^1.0.0"
+    "winston": "^1.0.0",
+    "prettysize": "^0.0.3"
   },
   "engines": {
     "node": "0.10.33"
