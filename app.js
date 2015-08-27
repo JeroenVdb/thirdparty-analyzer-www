@@ -1,11 +1,8 @@
 'use strict';
 
 var config = require('./config'),
-	partyPooper = require('party-pooper'),
 	express = require('express'),
 	app = express(),
-	Busboy = require('busboy'),
-	inspect = require('util').inspect,
 	server;
 
 var FormHandler = require('./controllers/formHandler.js');
@@ -21,6 +18,8 @@ server = app.listen(config.port, function() {
 	console.log('Example app listening at http://%s:%s', host, port);
 });
 
+app.use(express.static(__dirname + '/public'));
+
 // routing: homepage
 app.get('/', function(req, res) {
 	res.render('index', {
@@ -30,6 +29,5 @@ app.get('/', function(req, res) {
 	});
 });
 
-
 // routing: form submit from homepage
-app.post('/analyze', FormHandler);
+app.post('/formHandler', FormHandler);

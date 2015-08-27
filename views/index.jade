@@ -3,7 +3,7 @@ html
     title!= title
   body
     h1!= message
-    form(action="/analyze", method="post", enctype="multipart/form-data")
+    form(action="/formHandler", method="post", enctype="multipart/form-data")
         label First party urls, one url per line
         br
         textarea(name="firstparty", rows="6", cols="100")

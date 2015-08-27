@@ -1,7 +1,7 @@
 'use strict';
 
 var Busboy = require('busboy'),
-	Analyzer = require('./analyze.js');
+	Analyzer = require('./../lib/analyze.js');
 
 function FormHandler(req, res) {
 	var harData = '',
