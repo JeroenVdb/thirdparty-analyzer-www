@@ -1,33 +1,25 @@
 'use strict';
 
 var HarHelper = require('./harHelper.js');
-var UrlHelper = require('./urlHelper.js');
 var partyPooper = require('party-pooper');
 var pretty = require('prettysize');
 var validUrl = require('valid-url');
 var winston = require('winston');
 
 var firstParty = {
-	'name': 'First Party',
-	'entries': [],
-	'totals': {}
-}
-var thirdParty = [];
-var UnknownThirdParty =
-	{
-		'name': 'Unknown',
+		'name': 'First Party',
 		'entries': [],
 		'totals': {}
-	};
+	},
+	thirdParty = [];
 
 function Analyze(harData, firstPartyProviders, response) {
 	var harJson = JSON.parse(harData),
-		entries = [];
+		entries = [],
+		validatedFirstPartyUrls = [];
 
 	winston.log('info', 'firstPartyProviders is: ' + firstPartyProviders);
 	winston.log('info', 'firstPartyProviders typeof is: ' + typeof firstPartyProviders);
-
-	var thirdPartyEntries = [];
 
 	entries = getEntries(harJson);
 
@@ -38,8 +30,6 @@ function Analyze(harData, firstPartyProviders, response) {
 
 	// add first entry url to the list of third party urls
 	firstPartyProviders.push(entries[0].request.url);
-
-	var validatedFirstPartyUrls = [];
 
 	winston.log('info', 'First Party urls are: ' + firstPartyProviders.join(', '));
 
@@ -57,74 +47,13 @@ function Analyze(harData, firstPartyProviders, response) {
 
 	// check all request urls
 	entries.forEach(function(entry) {
-		// var found = false;
+		var contin = checkFirstParty(entry, validatedFirstPartyUrls);
 
 		winston.log('info', 'Analyze: ' + entry.request.url);
-
-		var contin = checkFirstParty(entry, validatedFirstPartyUrls);
 
 		if (contin) {
 			checkThirdParty(entry);
 		}
-
-
-		// if (isFirstPartyUrl(entry.request.url, firstPartyProviders)) {
-		// 	firstParty.entries.push(entry);
-		// } else {
-		// 	var provider = partyPooper.run(entry.request.url);
-
-
-		// 	thirdParty.forEach(function(party) {
-		// 		console.log('Compare time!');
-		// 		console.log(party.prev);
-		// 		console.log(getEntryReferer(entry));
-		// 		if (party.prev.indexOf(getEntryReferer(entry)) !== -1) {
-		// 			console.log('I FOUND ONE !!!!!!!!');
-		// 			console.log('in if');
-		// 			party.entries.push(entry);
-		// 			found = true;
-		// 		}
-		// 	});
-
-		// 	if (provider && !found) {
-
-		// 		thirdParty.forEach(function(party) {
-		// 			if (party.id === provider.id) {
-		// 				console.log('in else if');
-		// 				party.entries.push(entry);
-		// 				found = true;
-		// 			}
-		// 		});
-
-		// 		if (!found) {
-		// 			console.log('not found, add it: ' + provider.name);
-		// 			provider.entries.push(entry);
-		// 			provider.prev = [];
-		// 			provider.prev.push(entry.request.url);
-		// 			thirdParty.push(provider);
-		// 		}
-
-		// 	} else {
-		// 		if (!found) {
-		// 			var newEntry = {};
-		// 			newEntry.id = entry.request.url;
-		// 			newEntry.name = entry.request.url;
-		// 			newEntry.totals = {};
-		// 			newEntry.entries = [];
-		// 			newEntry.entries.push(entry);
-		// 			newEntry.prev = [];
-		// 			newEntry.prev.push(entry.request.url);
-		// 			thirdParty.push(newEntry);
-		// 		}
-		// 	}
-
-		// 	// provider.entries.push(entry);
-		// 	// provider.entries.push(getChildEntries(entries, entry));
-
-		// 	// thirdPartyEntries.push(provider);
-
-		// 	// console.log(thirdPartyEntries);
-		// }
 	});
 
 	// thirdParty.push(UnknownThirdParty);
@@ -150,7 +79,6 @@ function checkFirstParty(entry, aFirstParty) {
 		foundOne = false;
 
 	aFirstParty.forEach(function(firstPartyUrl) {
-
 		winston.log('info', 'checkFirstParty, compare to: ' + firstPartyUrl);
 
 		if (url.indexOf(firstPartyUrl) > -1) {
@@ -173,7 +101,9 @@ function checkFirstParty(entry, aFirstParty) {
 }
 
 function getEntryReferer(entry) {
-	for (var header in entry.request.headers) {
+	var header;
+
+	for (header in entry.request.headers) {
 		if (entry.request.headers[header].name === 'Referer') {
 			return entry.request.headers[header].value;
 		}
@@ -184,15 +114,15 @@ function getEntryReferer(entry) {
 
 function checkThirdParty(entry) {
 	var url = entry.request.url,
-		foundOne = false;
+		foundOne = false,
+		provider,
+		newEntry = {};
 
 	thirdParty.forEach(function(knownProvider) {
 		knownProvider.entries.forEach(function(knownEntry) {
-
 			winston.log('info', 'checkThirdParty referer, compare to: ' + knownEntry.request.url.substring(0, 50));
 
 			if (getEntryReferer(entry) === knownEntry.request.url) {
-
 				winston.log('info', 'FOUND ONE: REFERER');
 
 				knownProvider.entries.push(entry);
@@ -202,16 +132,14 @@ function checkThirdParty(entry) {
 		});
 	});
 
-	var provider = partyPooper.run(url);
+	provider = partyPooper.run(url);
 
 	if (!foundOne) {
 		if (provider) {
-
 			winston.log('info', 'Found a provider for this one: ' + provider.name);
 
 			thirdParty.forEach(function(knownProvider) {
 				if (provider.id === knownProvider.id) {
-
 					winston.log('info', 'Provider' + provider.name + ' already existed, add it to the existing object');
 
 					knownProvider.entries.push(entry);
@@ -221,7 +149,6 @@ function checkThirdParty(entry) {
 			});
 
 			if (!foundOne) {
-
 				winston.log('info', 'Provider' + provider.name + ' didnt exist, add it new to the array');
 
 				provider.entries.push(entry);
@@ -230,7 +157,7 @@ function checkThirdParty(entry) {
 		} else {
 			winston.log('info', 'Nothing found for this one, create a new entry');
 
-			var newEntry = {};
+			newEntry = {}
 			newEntry.id = entry.request.url;
 			newEntry.name = entry.request.url;
 			newEntry.totals = {};
