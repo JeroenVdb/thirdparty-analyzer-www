@@ -10,9 +10,10 @@
     "express": "^4.12.3",
     "jade": "^1.9.2",
     "party-pooper": "https://github.com/JeroenVdb/party-pooper/archive/1.6.0.tar.gz",
+    "prettysize": "^0.0.3",
+    "promise": "^7.0.4",
     "valid-url": "^1.0.9",
-    "winston": "^1.0.0",
-    "prettysize": "^0.0.3"
+    "winston": "^1.0.0"
   },
   "engines": {
     "node": "0.10.33"
