@@ -2,6 +2,7 @@
 
 var config = require('./config'),
 	express = require('express'),
+	logger = require('./lib/logger.js').log,
 	app = express(),
 	server;
 
@@ -15,7 +16,8 @@ server = app.listen(config.port, function() {
 	var host = server.address().address,
 	port = server.address().port;
 
-	console.log('Example app listening at http://%s:%s', host, port);
+	logger.log('info', 'Thirdparty Anayzer started at http://' + host + ':' + port);
+	logger.log('verbose', 'Thirdparty Anayzer started at http://' + host + ':' + port);
 });
 
 app.use(express.static(__dirname + '/public'));
