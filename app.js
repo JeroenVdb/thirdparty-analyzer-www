@@ -4,9 +4,13 @@ var config = require('./config'),
 	express = require('express'),
 	logger = require('./lib/logger.js').log,
 	app = express(),
-	server;
+	server,
+	Promise = require('promise');
 
 var FormHandler = require('./controllers/formHandler.js');
+var Analyzer = require('./lib/analyze.js');
+var renderResult = require('./lib/renderResult.js');
+
 
 // use Jade as templating engine
 app.set('view engine', 'jade');
@@ -32,4 +36,21 @@ app.get('/', function(req, res) {
 });
 
 // routing: form submit from homepage
-app.post('/formHandler', FormHandler);
+app.post('/formHandler', function(req, res) {
+	var analyzeObject = {
+		'server': {
+			'request': req,
+			'response': res
+		}
+	}
+
+	FormHandler(analyzeObject)
+		.then(Analyzer)
+		.then(function(analyzeObject) {
+			res.render('result', {
+				'title': 'Third party pooper',
+				'message': 'Gimmy all your HAR!',
+				'result': analyzeObject.thirdParty
+			});
+		});
+});
