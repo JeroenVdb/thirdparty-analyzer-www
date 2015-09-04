@@ -44,13 +44,9 @@ app.post('/formHandler', function(req, res) {
 		}
 	}
 
+	console.log(renderResult);
+
 	FormHandler(analyzeObject)
 		.then(Analyzer)
-		.then(function(analyzeObject) {
-			res.render('result', {
-				'title': 'Third party pooper',
-				'message': 'Gimmy all your HAR!',
-				'result': analyzeObject.thirdParty
-			});
-		});
+		.then(renderResult);
 });
