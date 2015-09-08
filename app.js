@@ -39,7 +39,11 @@ app.get('/', function(req, res) {
 app.get('/results/:resultKey', function(req, res) {
 	var resultKey = req.params.resultKey;
 
+	console.log('resultKey' + resultKey);
+
 	var analyzeObject = db.getResults(resultKey);
+
+	console.log(analyzeObject);
 
 	res.render('result', {
 		'title': 'Third party pooper',
@@ -61,14 +65,13 @@ app.post('/formHandler', function(req, res) {
 
 	FormHandler(analyzeObject)
 		.then(Analyzer)
-		.then(function(renderResult) {
+		.then(renderResult)
+		.then(function(analyzeObject) {
 			return new Promise(function(resolve, reject) {
-				db.saveResults(renderResult);
-
-				resolve(renderResult);
+				db.saveResults(analyzeObject);
+				resolve(analyzeObject);
 			});
 		})
-		.then(renderResult)
 		.catch(function(e) {
 			console.log(e); // "oh, no!"
 		});
