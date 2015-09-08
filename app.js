@@ -37,13 +37,8 @@ app.get('/', function(req, res) {
 });
 
 app.get('/results/:resultKey', function(req, res) {
-	var resultKey = req.params.resultKey;
-
-	console.log('resultKey' + resultKey);
-
-	var analyzeObject = db.getResults(resultKey);
-
-	console.log(analyzeObject);
+	var resultKey = req.params.resultKey,
+		analyzeObject = db.getResults(resultKey);
 
 	res.render('result', {
 		'title': 'Third party pooper',
@@ -60,8 +55,6 @@ app.post('/formHandler', function(req, res) {
 			'response': res
 		}
 	}
-
-	console.log(renderResult);
 
 	FormHandler(analyzeObject)
 		.then(Analyzer)
