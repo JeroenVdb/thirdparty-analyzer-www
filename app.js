@@ -23,6 +23,8 @@ server = app.listen(config.port, function() {
 
 	logger.log('info', 'Thirdparty Anayzer started at http://' + host + ':' + port);
 	logger.log('verbose', 'Thirdparty Anayzer started at http://' + host + ':' + port);
+
+	logger.log('info', 'Config object: ' + JSON.stringify(config));
 });
 
 app.use(express.static(__dirname + '/public'));
@@ -43,7 +45,7 @@ app.get('/results/:resultKey', function(req, res) {
 	res.render('result', {
 		'title': 'Third party pooper',
 		'message': 'Gimmy all your HAR!',
-		'result': analyzeObject.thirdParty
+		'result': analyzeObject.results
 	});
 });
 
