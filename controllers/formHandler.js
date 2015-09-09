@@ -32,7 +32,6 @@ function FormHandler(analyzeObject) {
 			// console.log('Field [' + fieldname + ']: value: ' + inspect(val));
 			if (fieldname === 'firstparty') {
 				firstPartyProviders = val.split(/\r\n/);
-				console.log(typeof firstPartyProviders);
 			}
 		});
 		busboy.on('finish', function() {
