@@ -11,11 +11,9 @@
     "connect-multiparty": "^1.2.5",
     "express": "^4.12.3",
     "jade": "^1.9.2",
-    "party-pooper": "https://github.com/JeroenVdb/party-pooper/archive/1.7.0.tar.gz",
-    "prettysize": "^0.0.3",
     "promise": "^7.0.4",
-    "valid-url": "^1.0.9",
-    "winston": "^1.0.0"
+    "winston": "^1.0.0",
+    "thirdparty-analyzer": "https://github.com/JeroenVdb/thirdparty-analyzer/archive/1.0.0.tar.gz"
   },
   "engines": {
     "node": "0.10.33"

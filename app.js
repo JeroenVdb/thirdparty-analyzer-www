@@ -9,7 +9,7 @@ var config = require('./config'),
 	Promise = require('promise');
 
 var FormHandler = require('./controllers/formHandler.js');
-var Analyzer = require('./lib/analyze.js');
+var Analyzer = require('thirdparty-analyzer');
 var renderResult = require('./lib/renderResult.js');
 
 
