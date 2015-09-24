@@ -9,8 +9,10 @@ var config = require('./config'),
 	Promise = require('promise');
 
 var FormHandler = require('./controllers/formHandler.js');
+var wptFormHandler = require('./controllers/wptFormHandler.js');
 var Analyzer = require('thirdparty-analyzer');
 var renderResult = require('./lib/renderResult.js');
+var wptData = require('./lib/wptData.js');
 
 
 // use Jade as templating engine
@@ -60,11 +62,47 @@ app.post('/formHandler', function(req, res) {
 
 	FormHandler(analyzeObject)
 		.then(Analyzer)
-		.then(renderResult)
 		.then(function(analyzeObject) {
 			return new Promise(function(resolve, reject) {
 				db.saveResults(analyzeObject);
 				resolve(analyzeObject);
+			});
+		})
+		.then(renderResult)
+		.catch(function(e) {
+			console.log(e); // "oh, no!"
+		});
+});
+
+// routing: form submit from homepage for WPT
+app.post('/wptFormHandler', function(req, res) {
+	var analyzeObject = {
+		'server': {
+			'request': req,
+			'response': res
+		}
+	}
+
+	wptFormHandler(analyzeObject)
+		.then(function(analyzeObject) {
+			return new Promise(function(resolve, reject) {
+				wptData(analyzeObject)
+					.then(Analyzer)
+					.then(function(analyzeObject) {
+						return new Promise(function(resolve, reject) {
+							console.log('save results');
+							db.saveResults(analyzeObject);
+							// resolve(analyzeObject);
+						});
+					})
+					.catch(function(e) {
+						console.log(e); // "oh, no!"
+					});
+
+
+				//create key
+				// .then send to wait page
+				analyzeObject.server.response.render('waiting-for-results', {});
 			});
 		})
 		.catch(function(e) {

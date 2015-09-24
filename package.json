@@ -11,9 +11,10 @@
     "connect-multiparty": "^1.2.5",
     "express": "^4.12.3",
     "jade": "^1.9.2",
+    "phantomjs": "^1.9.18",
     "promise": "^7.0.4",
-    "winston": "^1.0.0",
-    "thirdparty-analyzer": "https://github.com/JeroenVdb/thirdparty-analyzer/archive/1.0.0.tar.gz"
+    "thirdparty-analyzer": "https://github.com/JeroenVdb/thirdparty-analyzer/archive/1.0.0.tar.gz",
+    "winston": "^1.0.0"
   },
   "engines": {
     "node": "0.10.33"

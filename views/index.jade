@@ -16,3 +16,9 @@ html
         br
         br
         button(type="submit")= submit
+    form(action="/wptFormHandler", method="post", enctype="multipart/form-data")
+        label Url you want to send to WPT
+        br
+        input(type="text", name="url")
+        br
+        button(type="submit")= submit
